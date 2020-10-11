@@ -21,10 +21,14 @@
 //  OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 //  THE SOFTWARE.
 //
+// MARK: Comment start
 
 import Foundation
 
+/// sessionConfiguration 增加一个 af 的扩展
+/// 注意这个 af 用的很巧妙，所以才有各种类型的扩展支持 af
 extension URLSessionConfiguration: AlamofireExtended {}
+/// 不对系统的 configuration 造成影响，增加一个静态属性
 extension AlamofireExtension where ExtendedType: URLSessionConfiguration {
     /// Alamofire's default configuration. Same as `URLSessionConfiguration.default` but adds Alamofire default
     /// `Accept-Language`, `Accept-Encoding`, and `User-Agent` headers.
@@ -35,3 +39,5 @@ extension AlamofireExtension where ExtendedType: URLSessionConfiguration {
         return configuration
     }
 }
+
+// MARK: Comment end
