@@ -24,21 +24,28 @@
 
 import Foundation
 
+// MAKR： Comment start
+
 public extension URLRequest {
     /// Returns the `httpMethod` as Alamofire's `HTTPMethod` type.
+    /// 把 URLRequest 的方法转换为 Alamofire 的 HttpMethod
     var method: HTTPMethod? {
         get { httpMethod.flatMap(HTTPMethod.init) }
         set { httpMethod = newValue?.rawValue }
     }
 
     func validate() throws {
+        /// url 如果是 fileURL的话，抛出错误
         if let url = url, url.isFileURL {
             // This should become another urlRequestValidationFailed error in Alamofire 6.
             throw AFError.invalidURL(url: url)
         }
 
+        /// 方法是 get，但是却包含了 bodyData 也会包含错误
         if method == .get, let bodyData = httpBody {
             throw AFError.urlRequestValidationFailed(reason: .bodyDataInGETRequest(bodyData))
         }
     }
 }
+
+// MAKR： Comment end
