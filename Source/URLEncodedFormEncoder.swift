@@ -22,6 +22,8 @@
 //  THE SOFTWARE.
 //
 
+// MARK: Comment start
+
 import Foundation
 
 /// An object that encodes instances into URL-encoded query strings.
@@ -41,6 +43,8 @@ import Foundation
 /// while older encodings may expect spaces to be replaced with `+`.
 ///
 /// This type is largely based on Vapor's [`url-encoded-form`](https://github.com/vapor/url-encoded-form) project.
+
+/// 对内容进行编码，主要是各种默认格式的编码行为
 public final class URLEncodedFormEncoder {
     /// Encoding to use for `Array` values.
     public enum ArrayEncoding {
@@ -82,6 +86,7 @@ public final class URLEncodedFormEncoder {
     }
 
     /// Encoding to use for `Data` values.
+    /// 这里面有一个设计很好，有一个默认的扩展是可以自定义扩展把 data 转换为 string
     public enum DataEncoding {
         /// Defers encoding to the `Data` type.
         case deferredToData
@@ -98,9 +103,9 @@ public final class URLEncodedFormEncoder {
         ///                   `Encodable` implementation.
         func encode(_ data: Data) throws -> String? {
             switch self {
-            case .deferredToData: return nil
-            case .base64: return data.base64EncodedString()
-            case let .custom(encoding): return try encoding(data)
+            case .deferredToData: return nil  //返回nil
+            case .base64: return data.base64EncodedString()   //base64String
+            case let .custom(encoding): return try encoding(data)  //try 和 throws 匹配
             }
         }
     }
@@ -108,6 +113,7 @@ public final class URLEncodedFormEncoder {
     /// Encoding to use for `Date` values.
     public enum DateEncoding {
         /// ISO8601 and RFC3339 formatter.
+        /// 默认缓存
         private static let iso8601Formatter: ISO8601DateFormatter = {
             let formatter = ISO8601DateFormatter()
             formatter.formatOptions = .withInternetDateTime
@@ -117,6 +123,7 @@ public final class URLEncodedFormEncoder {
         /// Defers encoding to the `Date` type. This is the default encoding.
         case deferredToDate
         /// Encodes `Date`s as seconds since midnight UTC on January 1, 1970.
+        /// 自1970年的秒数
         case secondsSince1970
         /// Encodes `Date`s as milliseconds since midnight UTC on January 1, 1970.
         case millisecondsSince1970
@@ -143,7 +150,7 @@ public final class URLEncodedFormEncoder {
                 return String(date.timeIntervalSince1970 * 1000.0)
             case .iso8601:
                 return DateEncoding.iso8601Formatter.string(from: date)
-            case let .formatted(formatter):
+            case let .formatted(formatter):  /// case let  匹配的用法
                 return formatter.string(from: date)
             case let .custom(closure):
                 return try closure(date)
@@ -949,12 +956,14 @@ final class URLEncodedFormSerializer {
     }
 }
 
+/// 数组转换成字符串，用 & 连接
 extension Array where Element == String {
     func joinedWithAmpersands() -> String {
         joined(separator: "&")
     }
 }
 
+/// 字符集的扩展，先转换成 urlQueryAllowed 的 charSet ，然互
 public extension CharacterSet {
     /// Creates a CharacterSet from RFC 3986 allowed characters.
     ///
