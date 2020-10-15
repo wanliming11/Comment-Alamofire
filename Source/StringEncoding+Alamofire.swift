@@ -22,14 +22,18 @@
 //  THE SOFTWARE.
 //
 
+//MARK: begin
+
 import Foundation
 
+/// String.Encoding 是一个结构体，按字符串
 extension String.Encoding {
     /// Creates an encoding from the IANA charset name.
     ///
     /// - Notes: These mappings match those [provided by CoreFoundation](https://opensource.apple.com/source/CF/CF-476.18/CFStringUtilities.c.auto.html)
     ///
     /// - Parameter name: IANA charset name.
+    /// 从 String 转换为 String 的编码对象
     init?(ianaCharsetName name: String) {
         switch name.lowercased() {
         case "utf-8":
@@ -53,3 +57,5 @@ extension String.Encoding {
         }
     }
 }
+
+//MARK: end
