@@ -22,8 +22,11 @@
 //  THE SOFTWARE.
 //
 
+// MARK：Begin
+
 import Foundation
 
+/// 遍历构造函数，目的是为了更方便的构造出 URL
 /// Types adopting the `URLConvertible` protocol can be used to construct `URL`s, which can then be used to construct
 /// `URLRequests`.
 public protocol URLConvertible {
@@ -39,6 +42,8 @@ extension String: URLConvertible {
     ///
     /// - Returns: The `URL` initialized with `self`.
     /// - Throws:  An `AFError.invalidURL` instance.
+    
+    /// 失败，则抛出一个错误
     public func asURL() throws -> URL {
         guard let url = URL(string: self) else { throw AFError.invalidURL(url: self) }
 
@@ -46,11 +51,13 @@ extension String: URLConvertible {
     }
 }
 
+/// 如果是自身，因为没有这个方法，所以直接 return self
 extension URL: URLConvertible {
     /// Returns `self`.
     public func asURL() throws -> URL { self }
 }
 
+/// 根据变量 url 来转换，主要是判空
 extension URLComponents: URLConvertible {
     /// Returns a `URL` if the `self`'s `url` is not nil, otherwise throws.
     ///
@@ -85,7 +92,7 @@ extension URLRequest: URLRequestConvertible {
 }
 
 // MARK: -
-
+/// 扩展了一个构造函数，通过 url ，method 和 headers 来构造
 extension URLRequest {
     /// Creates an instance with the specified `url`, `method`, and `headers`.
     ///
@@ -103,3 +110,5 @@ extension URLRequest {
         allHTTPHeaderFields = headers?.dictionary
     }
 }
+
+/// MARK：End
